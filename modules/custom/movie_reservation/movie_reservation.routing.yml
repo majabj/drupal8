@@ -1,0 +1,9 @@
+movie_reservation.page:
+    path: '/movie-reservation'
+    defaults:
+       _controller: '\Drupal\movie_reservation\Controller\MovieReservation::page'
+       _title: 'Welcome to the movie reservation'
+    requirements:
+      _permission: 'access content'
+
+

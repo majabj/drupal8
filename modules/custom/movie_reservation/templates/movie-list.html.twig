@@ -1,0 +1,59 @@
+
+ <h3> 'Please select movie genre for which you would like to make a reservation:' </h3>
+
+  <select>
+  {% for genre in genres %}
+  <option value= "{{genre.tid.value}}"> {{genre.name.value}}</option>
+  {% endfor %}
+  </select>
+
+  <div>
+  {% for movie in movies %}
+    <div class="movie"> 
+    {{ movie.title.value }}
+    <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
+    {{ movie.field_description.value }}
+
+    <h3> 'This movie is available on:' </h3>
+
+    {% for day in movie.field_days %}
+    {{day.entity.label}}
+    {% endfor %}
+
+    <br>
+    </div>
+
+  {% endfor %}
+  </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  
+  var selectedGenre = $('select');
+  
+  selectedGenre.on('change', function () {
+    $.ajax({
+      url: '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val(),
+      type: 'POST',
+      cache: false,
+      success: function () {
+         location.href = '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val();
+    }
+    });
+  })    
+  $('.movie').click(function(){
+    if($(this).prop('id')=='selected'){
+        $("#b").remove();
+        $(this).removeAttr('id');
+        $(this).css("background-color", "white");
+    }else{
+         $(this).attr('id', 'selected');
+         $(this).append("<button id='b'>Reserve </button>");
+         $(this).css("background-color", "orange");
+         }
+    })  
+
+  
+
+</script>
+

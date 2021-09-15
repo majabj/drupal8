@@ -1,0 +1,4 @@
+name: Movie reservation 
+description: Welcome to the movie reservation page
+type: module
+core: 8.x
