@@ -12,19 +12,28 @@
     <div class="movie"> 
     {{ movie.title.value }}
     <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
-    {{ movie.field_description.value }}
+    <p>{{ movie.field_description.value }}</p>
 
     <h3> 'This movie is available on:' </h3>
-
+    
     {% for day in movie.field_days %}
     {{day.entity.label}}
     {% endfor %}
-
+    
     <br>
     </div>
 
   {% endfor %}
   </div>
+
+ <div class="modal-content">
+ <p> Click on a day you would like to make a reservation for</p>
+ <div class=days></div>
+ <div class="confirm"> </div>
+ </div>
+
+
+
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -48,12 +57,16 @@
         $(this).css("background-color", "white");
     }else{
          $(this).attr('id', 'selected');
-         $(this).append("<button id='b'>Reserve </button>");
+         $(this).append("<button id='b' class='bclass'>Reserve </button>");
          $(this).css("background-color", "orange");
          }
-    })  
+    }) 
 
-  
+    $('#b').on('click', function(){
+      $('#modal-content').modal('show');
+    })
+    
+
 
 </script>
 
