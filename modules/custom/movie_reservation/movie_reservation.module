@@ -14,3 +14,7 @@ function movie_reservation_theme($existing, $type, $theme, $path)
     )
   );
 }
+
+function movie_reservation_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'movie_reservation/movie_reservation_css';
+}
