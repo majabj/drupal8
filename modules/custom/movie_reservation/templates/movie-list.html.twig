@@ -17,28 +17,35 @@
     <p>{{ movie.field_description.value }}</p>
 
     <h3> 'This movie is available on:' </h3>
-
+    <div class="adays">
     {% for day in movie.field_days %}
-    {{day.entity.label}}
+    <span><a id="availabledays" href="javascript:void(0)"> {{day.entity.label}}</a></span>
     {% endfor %}
-
+    </div>
     <br>
     <button id="b" class="bclass" style="visibility:hidden"> Reserve</button>
+    <button id="but" class="butclass" style="visibility:hidden"> Confirm </button>
     </div>
   {% endfor %}
    
   </div>
 
-  <!-- The Modal -->
+
+<!-- The Modal -->
 <div id="myModal" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Available days for this movie are:</h4>
+    <div class= "modal-body">
+     <div class="days" id="iddays" ></div>
+     <br>
+     <div class="confirmbutton"></div>
+    </div>
   </div>
-</div>
 
+</div>
 
  
 
@@ -62,7 +69,8 @@
   })
 
 
-  
+    
+
   
   $('.movie').click(function(){
     if($(this).prop('id')=='selected'){
@@ -73,16 +81,25 @@
          $(this).attr('id', 'selected');
          $(this).children('.bclass').css("visibility", "visible");
          $(this).css("background-color", "orange");
+
+         
        
          }
     })
 
-    $('.bclass').click(function(){
-      $('.modal-content').modal('show');
-      
-    })
+    
 
+$(".bclass").click(function (e) {
+  var movie = e.target.closest(".movie");
+  var days = movie.querySelector(".adays");
+  $(".modal .days").html(days.innerHTML);
+  $(".modal").modal("show");
+});
 
+$(document).on("click","#availabledays",function(){
+  $(".confirmbutton").append("<button id='b'>Confirm your movie reservation </button>");
+ console.log("kliknuto");
+});
 
 
 
