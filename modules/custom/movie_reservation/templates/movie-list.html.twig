@@ -1,107 +1,102 @@
-{{ attach_library('movie_reservation/movie_reservation_css') }}
+  {{ attach_library('movie_reservation/movie_reservation_css') }}
 
 
- <h3> 'Please select movie genre for which you would like to make a reservation:' </h3>
+  <h3> 'Please select movie genre for which you would like to make a reservation:' </h3>
 
-  <select>
-  {% for genre in genres %}
-  <option value= "{{genre.tid.value}}"> {{genre.name.value}}</option>
-  {% endfor %}
-  </select>
-
-  <div>
-  {% for movie in movies %}
-    <div class="movie">
-    {{ movie.title.value }}
-    <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
-    <p>{{ movie.field_description.value }}</p>
-
-    <h3> 'This movie is available on:' </h3>
-    <div class="adays">
-    {% for day in movie.field_days %}
-    <span><a id="availabledays" href="javascript:void(0)"> {{day.entity.label}}</a></span>
+    <select>
+    {% for genre in genres %}
+    <option value= "{{genre.tid.value}}"> {{genre.name.value}}</option>
     {% endfor %}
-    </div>
-    <br>
-    <button id="b" class="bclass" style="visibility:hidden"> Reserve</button>
-    <button id="but" class="butclass" style="visibility:hidden"> Confirm </button>
-    </div>
-  {% endfor %}
-   
-  </div>
+    </select>
 
+    <div>
+    {% for movie in movies %}
+      <div class="movie">
+      {{ movie.title.value }}
+      <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
+      <p>{{ movie.field_description.value }}</p>
 
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h4 class="modal-title">Available days for this movie are:</h4>
-    <div class= "modal-body">
-     <div class="days" id="iddays" ></div>
-     <br>
-     <div class="confirmbutton"></div>
-    </div>
-  </div>
-
-</div>
-
- 
-
-
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-
-  var selectedGenre = $('select');
-
-  selectedGenre.on('change', function () {
-    $.ajax({
-      url: '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val(),
-      type: 'POST',
-      cache: false,
-      success: function () {
-         window.location.href = '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val();
-    }
-    });
-  })
-
-
+      <h3> 'This movie is available on:' </h3>
+      <div class="adays">
+      {% for day in movie.field_days %}
+      <span><a id="availabledays" href="javascript:void(0)"> {{day.entity.label}}</a></span>
+      {% endfor %}
+      </div>
+      <br>
+      <button class="breserve" style="visibility:hidden"> Reserve</button>
+      <div class="buttonclass"><button class="bconfirm" style="visibility:hidden"> Confirm your movie reservation </button></div>
+      </div>
+    {% endfor %}
     
+    </div>
+
+
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Available days for this movie are:</h4>
+      <div class= "modal-body">
+      <div class="days" id="iddays" ></div>
+      <br>
+      <div class="confirmbutton"></div>
+      
+      </div>
+    </div>
+
+  </div>
 
   
-  $('.movie').click(function(){
-    if($(this).prop('id')=='selected'){
-      $(this).children('.bclass').css("visibility", "hidden");
-        $(this).removeAttr('id');
-        $(this).css("background-color", "white");
-    }else{
-         $(this).attr('id', 'selected');
-         $(this).children('.bclass').css("visibility", "visible");
-         $(this).css("background-color", "orange");
 
-         
-       
-         }
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+
+    var selectedGenre = $('select');
+
+    selectedGenre.on('change', function () {
+      $.ajax({
+        url: '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val(),
+        type: 'POST',
+        cache: false,
+        success: function () {
+          window.location.href = '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val();
+      }
+      });
     })
 
+
     
-
-$(".bclass").click(function (e) {
-  var movie = e.target.closest(".movie");
-  var days = movie.querySelector(".adays");
-  $(".modal .days").html(days.innerHTML);
-  $(".modal").modal("show");
-});
-
-$(document).on("click","#availabledays",function(){
-  $(".confirmbutton").append("<button id='b'>Confirm your movie reservation </button>");
- console.log("kliknuto");
-});
-
+    $('.movie').click(function(){
+      if($(this).prop('id')=='selected'){
+        $(this).children('.breserve').css("visibility", "hidden");
+          $(this).removeAttr('id');
+          $(this).css("background-color", "white");
+      }else{
+          $(this).attr('id', 'selected');
+          $(this).children('.breserve').css("visibility", "visible");
+          $(this).css("background-color", "orange");
+          }
+      })
 
 
-</script>
+  $(".breserve").click(function (e) {
+    var movie = e.target.closest(".movie");
+    var days = movie.querySelector(".adays");
+    var button = movie.querySelector(".buttonclass");
+    $(".modal .days").html(days.innerHTML);
+    $(".modal .confirmbutton").html(button.innerHTML);
+
+    $(".modal").modal("show");
+  });
+
+
+  $(document).on("click","#availabledays",function(){
+    $(".confirmbutton").children('.bconfirm').css("visibility", "visible");
+    console.log("kliknuto");
+  });
+
+  </script>
 
