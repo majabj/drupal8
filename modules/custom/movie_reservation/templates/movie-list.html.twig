@@ -1,7 +1,7 @@
   {{ attach_library('movie_reservation/movie_reservation_css') }}
 
 
-  <h3> 'Please select movie genre for which you would like to make a reservation:' </h3>
+  <h3> Please select movie genre for which you would like to make a reservation: </h3>
 
     <select>
     {% for genre in genres %}
@@ -12,40 +12,40 @@
     <div>
     {% for movie in movies %}
       <div class="movie">
-      {{ movie.title.value }}
+      <div class="movie-title">{{ movie.title.value }}</div>
       <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
-      <p>{{ movie.field_description.value }}</p>
+      <div class="movie-description">{{ movie.field_description.value }}</div>
 
-      <h3> 'This movie is available on:' </h3>
-      <div class="adays">
-      {% for day in movie.field_days %}
-      <span><a id="availabledays" href="javascript:void(0)"> {{day.entity.label}}</a></span>
-      {% endfor %}
+      <h3> This movie is available on: </h3>
+      <div class="available-movie-days">
+        {% for day in movie.field_days %}
+        <span><a id="available-days" href="javascript:void(0)"> {{day.entity.label}}</a></span>
+        {% endfor %}
       </div>
       <br>
-      <button class="breserve" style="visibility:hidden"> Reserve</button>
-      <div class="buttonclass"><button class="bconfirm" style="visibility:hidden"> Confirm your movie reservation </button></div>
+      <button class="reserve-movie" style="visibility:hidden"> Reserve</button>
+      <div class="button-to-confirm-reservation">
+        <button class="confirm-reservation" style="visibility:hidden"> Confirm your movie reservation </button>
       </div>
+    </div>
     {% endfor %}
     
     </div>
 
 
   <!-- The Modal -->
-  <div id="myModal" class="modal">
+  <div id="confirm-reservation-modal" class="modal">
 
     <!-- Modal content -->
     <div class="modal-content">
       <button type="button" class="close" data-dismiss="modal">&times;</button>
       <h4 class="modal-title">Available days for this movie are:</h4>
       <div class= "modal-body">
-      <div class="days" id="iddays" ></div>
+      <div class="days" ></div>
       <br>
-      <div class="confirmbutton"></div>
-      
+      <div class="confirm-reservation-button-modal"></div>
       </div>
     </div>
-
   </div>
 
   
@@ -71,32 +71,33 @@
     
     $('.movie').click(function(){
       if($(this).prop('id')=='selected'){
-        $(this).children('.breserve').css("visibility", "hidden");
-          $(this).removeAttr('id');
-          $(this).css("background-color", "white");
+        $(this).children('.reserve-movie').css("visibility", "hidden");
+        $(this).removeAttr('id');
+        $(this).css("background-color", "white");
       }else{
           $(this).attr('id', 'selected');
-          $(this).children('.breserve').css("visibility", "visible");
+          $(this).children('.reserve-movie').css("visibility", "visible");
           $(this).css("background-color", "orange");
           }
-      })
+     })
 
 
-  $(".breserve").click(function (e) {
-    var movie = e.target.closest(".movie");
-    var days = movie.querySelector(".adays");
-    var button = movie.querySelector(".buttonclass");
+  $(".reserve-movie").click(function (e) {
+    const movie = e.target.closest(".movie");
+    const days = movie.querySelector(".available-movie-days");
+    const button = movie.querySelector(".button-to-confirm-reservation");
     $(".modal .days").html(days.innerHTML);
-    $(".modal .confirmbutton").html(button.innerHTML);
+    $(".modal .confirm-reservation-button-modal").html(button.innerHTML);
 
     $(".modal").modal("show");
   });
 
 
-  $(document).on("click","#availabledays",function(){
-    $(".confirmbutton").children('.bconfirm').css("visibility", "visible");
+  $(document).on("click","#available-days",function(){
+    $(".confirm-reservation-button-modal").children('.confirm-reservation').css("visibility", "visible");
     console.log("kliknuto");
   });
+
 
   </script>
 
