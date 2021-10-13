@@ -1,0 +1,6 @@
+movie_reservation_css:
+  version: 1.0
+  css:
+    theme:
+      css/movie_reservation.css: { }
+      
