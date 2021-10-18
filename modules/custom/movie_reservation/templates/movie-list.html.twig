@@ -1,7 +1,11 @@
   {{ attach_library('movie_reservation/movie_reservation_css') }}
 
+  
+  <input type="text" id="customer-name" maxlength="10" style="text-transform: capitalize;
+   placeholder="Please write your full name" required>
 
-  <input type="text" class="customer-name" placeholder="Please write your full name" required>
+  <button id="confirm-name"> Confirm </button>
+
   <h3> Please select movie genre for which you would like to make a reservation: </h3>
 
     <select>
@@ -96,9 +100,20 @@
 
   $(document).on("click","#available-days",function(){
     $(".confirm-reservation-button-modal").children('.confirm-reservation').css("visibility", "visible");
-    console.log("kliknuto");
+    console.log("clicked");
   });
 
+  $(document).on("click","#confirm-name", function(){
+    const name = document.getElementById('customer-name').value;
+    if(name.match(/^[a-zA-Z_ ]*$/)){
+       alert("It's valid");
+       return true;
+    } else {
+        alert("Please enter only alphabets");
+        return false;
+    }
+  });
 
   </script>
+
 
