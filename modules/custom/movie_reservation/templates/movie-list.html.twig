@@ -100,11 +100,11 @@
 
   $(document).on("click","#available-days",function(){
     $(".confirm-reservation-button-modal").children('.confirm-reservation').css("visibility", "visible");
-    console.log("kliknuto");
+    console.log("clicked");
   });
 
   $(document).on("click","#confirm-name", function(){
-    var name = document.getElementById('customer-name').value;
+    const name = document.getElementById('customer-name').value;
     if(name.match(/^[a-zA-Z_ ]*$/)){
             alert("It's valid");
             return true;
