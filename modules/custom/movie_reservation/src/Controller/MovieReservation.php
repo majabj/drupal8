@@ -25,7 +25,7 @@ class MovieReservation extends ControllerBase{
       '#movies' => $this->getMovieList(),
       '#genres' => $this->getTaxonomy('genres'),
       '#days' => $this->getTaxonomy('days'),
-
+      '#reservation' => $this->saveReservation(),
     ];
   }
 
@@ -44,8 +44,15 @@ class MovieReservation extends ControllerBase{
     return Term::loadMultiple($taxonomy);
   }
 
-
-
-
+  public function saveReservation(){
+    //$reservationData =  \Drupal::entityQuery('reservations')->insert();
+    $reservationData = \Drupal::request()->get('reservationData');
+    if (!empty($reservationData)){
+      $reservation =\Drupal::entityQuery('reservations')->insert();
+    }else{
+      $reservation = "Your reservation hasn't been recorded, please try again!";
+    }
+  }
 
 }
+
