@@ -13,9 +13,8 @@ use Drupal\Core\Database\Driver\mysql\Select;
 use Drupal\Core\Database\Connection;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Ajax\AjaxResponse;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class MovieReservation extends ControllerBase{
@@ -27,11 +26,8 @@ class MovieReservation extends ControllerBase{
       '#genres' => $this->getTaxonomy('genres'),
       '#days' => $this->getTaxonomy('days'),
       '#reservation' => $this->saveReservation(),
-      '#nid' => $this->getMovieId('nid'),
-
     ];
   }
-
 
   public function getMovieList(){
    $selectedGenre= \Drupal::request()->request->get('selectedGenre');
@@ -48,38 +44,38 @@ class MovieReservation extends ControllerBase{
     return Term::loadMultiple($taxonomy);
   }
 
-  public function getMovieId($nid){
-    $movieid = \Drupal::entityQuery('node')->condition('nid', $nid)->execute();
-    return Node::loadMultiple($movieid);
-  }
-
-  public function queryForId(){
-
-  $movieid = db_query('SELECT movies FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
-  return $movieid;
-  }
-
   public function saveReservation(){
+
   $reservationData = \Drupal::request()->request->get('reservationData');
+  $data = json_decode($reservationData);
+  $name= $data->thename;
+  $movie= $data->themovie;
+  $day= $data->theday;
   $connection = \Drupal\Core\Database\Database::getConnection();
 
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $node = $node_storage->load($movie);
+  $title= $node->title->value;
+  $vid = $node->vid->value;
+
+  
   if(!empty($reservationData)){
     $result = $connection->insert('reservations')
     ->fields([
-      'id' => $nid,
-      'day_of_reservation' => $reservationData[selectedDay],
-      'time_of_reservation' => ('Y-m-d h:i:s'),
-      'reserved_movie_name' => $movieid[selectedMovie],
-      'reserved_movie_genre' => $movieid[selectedMovie],
-      'customer_name' => $reservationData[name],
-
+      'day_of_reservation' => $day,
+      'time_of_reservation' => date('Y-m-d H:i:s'),
+      'reserved_movie_name' => $title,
+      'reserved_movie_genre' => $vid,
+      'customer_name' => $name,
     ])
-     ->execute();
+    ->execute();
+  
     return new JsonResponse ([ 'data' => 'Success! Your reservation has been saved!', 'method' => 'GET', 'status'=> 'success']);
 
-  }else{
-    return new JsonRepsone ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
-  }
+    } else{
+      
+    return new JsonResponse ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
+    }
   }
 
 }
