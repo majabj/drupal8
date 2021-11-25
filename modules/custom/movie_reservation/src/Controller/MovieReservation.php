@@ -73,8 +73,7 @@ class MovieReservation extends ControllerBase{
     return new JsonResponse ([ 'data' => 'Success! Your reservation has been saved!', 'method' => 'GET', 'status'=> 'success']);
 
     } else{
-      
-    return new JsonResponse ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
+        return new JsonResponse ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
     }
   }
 

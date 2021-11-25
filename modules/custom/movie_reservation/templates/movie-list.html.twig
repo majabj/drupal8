@@ -16,7 +16,7 @@
 
     <div>
     {% for movie in movies %}
-      <div class="movie" id= "{{movie.nid.value}}">
+      <div class="movie" movie-id= "{{movie.nid.value}}">
       <div class="movie-title">{{ movie.title.value }}</div>
       <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
       <div class="movie-description">{{ movie.field_description.value }}</div>
@@ -69,78 +69,84 @@
           window.location.href = '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val();
       }
       });
-    })
+    });
    
     
-    var selectedMovie = " ";
+    
     $('.movie').click(function(){
-      if($(this).prop('data-id')=='selected'){
+      if($(this).prop('id')=='selected'){
         $(this).children('.reserve-movie').css("visibility", "hidden");
-        $(this).removeAttr('data-id');
+        $(this).removeAttr('id');
         $(this).css("background-color", "white");
 
       }else{
-          $(this).attr('data-id', 'selected');
+          $(this).attr('id', 'selected');
           $(this).children('.reserve-movie').css("visibility", "visible");
           $(this).css("background-color", "orange");
-          }
-    })
+          }   
+
+    });
+  
      
+    var selectedMovie = " ";
+    $(".reserve-movie").click(function (e) {
+      selectedMovie = $(this).parent('.movie').attr('movie-id');
+      reservationData.themovie= selectedMovie;
+      alert(selectedMovie);
+      console.log(selectedMovie);
+
+      const movie = e.target.closest(".movie");
+      const days = movie.querySelector(".available-movie-days");
+      $(".modal .days").html(days.innerHTML);
+      $(".modal").modal("show");
+    });
+
+    var selectedDay= " ";
+    $(document).on("click","#available-days",function(event){
+      selectedDay = $(event.target).text();
+      reservationData.theday= selectedDay;
+      alert(selectedDay);
+      console.log(selectedDay);
+      $(".modal-footer").children('.confirm-reservation').css("visibility", "visible");
+
+    });
+
+    $('.close').click(function(){
+      $('.modal-footer').children('.confirm-reservation').css("visibility", "hidden");
+    })
+
   
-  $(".reserve-movie").click(function (event) {
-    selectedMovie = $(this).parent('.movie').attr('id');
-    reservationData.themovie= selectedMovie;
-    //alert(selectedMovie);
-    console.log(selectedMovie);
+    $(document).on("click","#confirm-name", function(event){
+      const name = document.getElementById('customer-name').value;
+      if(name.match(/^[a-zA-Z_ ]*$/)){
+        reservationData.thename= name;
+        alert(name);
+        console.log(name);
+        return name;
 
-    const movie = event.target.closest(".movie");
-    const days = movie.querySelector(".available-movie-days");
-    $(".modal .days").html(days.innerHTML);
-    $(".modal").modal("show");
-  });
-
-  var selectedDay= " ";
-  $(document).on("click","#available-days",function(event){
-    selectedDay = $(event.target).text();
-    reservationData.theday= selectedDay;
-    //alert(selectedDay);
-    console.log(selectedDay);
-    $(".modal-footer").children('.confirm-reservation').css("visibility", "visible");
-
-  });
-
-  
-  $(document).on("click","#confirm-name", function(event){
-    const name = document.getElementById('customer-name').value;
-    if(name.match(/^[a-zA-Z_ ]*$/)){
-      reservationData.thename= name;
-      alert(name);
-      console.log(name);
-      return name;
-
-    } else {
-        alert("Please enter only alphabets");
-        return false;
-    }
-  });
-
-  console.log('jasammajacarica');
-  var confirmReservation = $('.confirm-reservation');
-
-  var reservationData = {}
-  
-  confirmReservation.on('click', function(){
-
-    $.ajax({
-      url: '/drupal/movie-reservation',
-      type: 'POST',
-      cache: false,
-      data: { reservationData: JSON.stringify(reservationData) },
-      success: function(data){
-        alert("Success! Your information has been saved!");
+      } else {
+          alert("Please enter only alphabets");
+          return false;
       }
-     });
-  })
+   });
+
+    console.log('jasammajacarica');
+    var confirmReservation = $('.confirm-reservation');
+
+    var reservationData = {}
+  
+    confirmReservation.on('click', function(){
+
+      $.ajax({
+        url: '/drupal/movie-reservation',
+        type: 'POST',
+        cache: false,
+        data: { reservationData: JSON.stringify(reservationData) },
+        success: function(data){
+          alert("Success! Your information has been saved!");
+        }
+      });
+    });
 
   </script>
 
