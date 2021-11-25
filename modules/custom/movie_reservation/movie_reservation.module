@@ -9,8 +9,15 @@ function movie_reservation_theme($existing, $type, $theme, $path)
       'variables' => array('movies' => array(), 
         'title' => '', 
         'genres' => array(), 
-        'days' => array())
+        'days' => array(),
+        'reservation' => array(),
+        'movieid' => array())
         
+    ),
+    'reservation_list' => array (
+      'variables' => array (
+        'title' => ''
+      )
     )
   );
 }

@@ -29,6 +29,13 @@ class MovieReservation extends ControllerBase{
     ];
   }
 
+  public function reservation(){
+    return [
+      '#theme' => 'reservation_list',
+      '#title' => 'Welcome to the reservation page',
+    ];
+  }
+
   public function getMovieList(){
    $selectedGenre= \Drupal::request()->request->get('selectedGenre');
    if (!empty($selectedGenre)){
