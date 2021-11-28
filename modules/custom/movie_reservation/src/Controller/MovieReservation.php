@@ -60,7 +60,7 @@ class MovieReservation extends ControllerBase{
   $vid = $node->vid->value;
 
   
-  if(!empty($reservationData)){
+  if(!empty($reservationData)) {
     $result = $connection->insert('reservations')
     ->fields([
       'day_of_reservation' => $day,
@@ -74,11 +74,10 @@ class MovieReservation extends ControllerBase{
     if(!empty($result)){
 
       return new JsonResponse ([ 'data' => 'Success! Your reservation has been saved!', 'method' => 'GET', 'status'=> 'success']);
-
       }
 
-  return new JsonResponse ([ 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
     }
+  return new JsonResponse ([ 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
   }
 
 }
