@@ -26,6 +26,15 @@ class MovieReservation extends ControllerBase{
       '#genres' => $this->getTaxonomy('genres'),
       '#days' => $this->getTaxonomy('days'),
       '#reservation' => $this->saveReservation(),
+      
+    ];
+  }
+
+  public function reservation(){
+    return [
+      '#theme' => 'reservation_list',
+      '#title' => 'This is the list of all reservations:',
+      '#reservations' => $this->getReservationList(),
     ];
   }
 
@@ -75,6 +84,15 @@ class MovieReservation extends ControllerBase{
     } else{
         return new JsonResponse ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
     }
+  }
+
+  public function getReservationList(){
+
+    $database=  \Drupal\Core\Database\Database::getConnection();
+    $query = $database->query('SELECT * FROM reservations');
+    $reservations = $query->fetchAll();
+    return $reservations;
+
   }
 
 }

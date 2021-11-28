@@ -87,10 +87,8 @@
 
     });
   
-     
-    var selectedMovie = " ";
     $(".reserve-movie").click(function (e) {
-      selectedMovie = $(this).parent('.movie').attr('movie-id');
+      const selectedMovie = $(this).parent('.movie').attr('movie-id');
       reservationData.themovie= selectedMovie;
       alert(selectedMovie);
       console.log(selectedMovie);
@@ -101,9 +99,8 @@
       $(".modal").modal("show");
     });
 
-    var selectedDay= " ";
     $(document).on("click","#available-days",function(event){
-      selectedDay = $(event.target).text();
+      const selectedDay = $(event.target).text();
       reservationData.theday= selectedDay;
       alert(selectedDay);
       console.log(selectedDay);
