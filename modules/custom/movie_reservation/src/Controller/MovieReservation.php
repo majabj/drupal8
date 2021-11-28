@@ -30,14 +30,6 @@ class MovieReservation extends ControllerBase{
     ];
   }
 
-  public function reservation(){
-    return [
-      '#theme' => 'reservation_list',
-      '#title' => 'This is the list of all reservations:',
-      '#reservations' => $this->getReservationList(),
-    ];
-  }
-
   public function getMovieList(){
    $selectedGenre= \Drupal::request()->request->get('selectedGenre');
    if (!empty($selectedGenre)){
@@ -78,21 +70,18 @@ class MovieReservation extends ControllerBase{
       'customer_name' => $name,
     ])
     ->execute();
-  
-    return new JsonResponse ([ 'data' => 'Success! Your reservation has been saved!', 'method' => 'GET', 'status'=> 'success']);
 
-    } else{
-        return new JsonResponse ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
-    }
-  }
+    if(!empty($result)){
 
-  public function getReservationList(){
+      return new JsonResponse ([ 'data' => 'Success! Your reservation has been saved!', 'method' => 'GET', 'status'=> 'success']);
 
-    $database=  \Drupal\Core\Database\Database::getConnection();
-    $query = $database->query('SELECT * FROM reservations');
-    $reservations = $query->fetchAll();
-    return $reservations;
+      } else {
+          return new JsonResponse ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
+        }
 
+    } else {
+        return new JsonResponse ([ 'data' => 'Error! Please try again.', 'method' => 'GET', 'status'=> 'error']);
+      }
   }
 
 }
