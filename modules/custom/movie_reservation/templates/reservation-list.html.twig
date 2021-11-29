@@ -1,1 +1,26 @@
-{{title}}
+<h3> Select way of sorting reservations: </h3>
+
+
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+<div>
+{% for reservation in reservations %}
+
+<div class ="reservation">
+
+<h1> <div class ="id-reservation" style="color:red; "> {{reservation.id}}</div> </h1>
+
+<h3> <div class= "reserved-movie">Reservation for movie: {{reservation.reserved_movie_name}}</div> </h3>
+
+<h3> <div class ="reserved-day">Day of reservation: {{reservation.day_of_reservation}}</div> </h3>
+
+<h3> <div class="reserved-customer-name"> Name of customer: {{reservation.customer_name}}</div> </h3>
+
+</div>
+
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+{% endfor %}
+</div>
+
+
+

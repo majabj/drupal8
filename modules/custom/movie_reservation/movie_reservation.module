@@ -2,24 +2,28 @@
 <?php
 
 
-function movie_reservation_theme($existing, $type, $theme, $path)
-{
-  return array(
+function movie_reservation_theme($existing, $type, $theme, $path){
+
+  return [
+
     'movie_list' => array(
-      'variables' => array('movies' => array(), 
+
+      'variables' => array(
+        'movies' => array(), 
         'title' => '', 
         'genres' => array(), 
         'days' => array(),
-        'reservation' => array(),
-        'movieid' => array())
+        'reservation' => array() )
         
     ),
+
     'reservation_list' => array (
+
       'variables' => array (
-        'title' => ''
-      )
-    )
-  );
+        'title' => '',
+        'reservations' => array() )
+    ),
+  ];
 }
 
 function movie_reservation_page_attachments(array &$page) {

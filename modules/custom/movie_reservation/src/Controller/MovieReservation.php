@@ -32,7 +32,8 @@ class MovieReservation extends ControllerBase{
   public function reservation(){
     return [
       '#theme' => 'reservation_list',
-      '#title' => 'Welcome to the reservation page',
+      '#title' => 'List of all reservations:',
+      '#reservations' => $this->getReservationList(),
     ];
   }
 
@@ -82,6 +83,15 @@ class MovieReservation extends ControllerBase{
     } else{
         return new JsonResponse ([ 'data' => 'Error! Your reservation has not been saved!', 'method' => 'GET', 'status'=> 'error']);
     }
+  }
+
+  public function getReservationList(){
+
+    $database=  \Drupal\Core\Database\Database::getConnection();
+    $query = $database->query('SELECT * FROM reservations');
+    $reservations = $query->fetchAll();
+    return $reservations;
+
   }
 
 }
