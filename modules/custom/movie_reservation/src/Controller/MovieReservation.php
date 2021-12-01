@@ -18,6 +18,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class MovieReservation extends ControllerBase{
+
+  /**
+   * Function that provides page 'movie-reservation' that has list of all movies from database.
+   * @return array
+   */
   public function page(){
     return [
       '#theme' => 'movie_list',
@@ -29,7 +34,11 @@ class MovieReservation extends ControllerBase{
     ];
   }
 
-  public function reservation(){
+  /**
+   * Function that provides page 'all-reservation' that has list of all reservations from database.
+   * @return array
+   */
+  public function reservationPage(){
     return [
       '#theme' => 'reservation_list',
       '#title' => 'List of all reservations:',
@@ -91,8 +100,6 @@ class MovieReservation extends ControllerBase{
     $query = $database->query('SELECT * FROM reservations');
     $reservations = $query->fetchAll();
     return $reservations;
-
   }
-
 }
 
