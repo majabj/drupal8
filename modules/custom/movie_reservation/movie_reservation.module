@@ -2,23 +2,18 @@
 <?php
 
 
-function movie_reservation_theme($existing, $type, $theme, $path){
-
+function movie_reservation_theme($existing, $type, $theme, $path)
+{
   return [
-
     'movie_list' => array(
-
       'variables' => array(
         'movies' => array(), 
         'title' => '', 
         'genres' => array(), 
         'days' => array(),
-        'reservation' => array() )
-        
+        'reservation' => array() )   
     ),
-
     'reservation_list' => array (
-
       'variables' => array (
         'reservations' => array(),
         'title' => '' )
