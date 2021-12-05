@@ -1,5 +1,13 @@
 <h3> Select way of sorting reservations: </h3>
 
+<select name="sort" id="select"> 
+<option hidden disabled selected value> -- select an option -- </option>
+<option value="reserved_movie_name|ASC"> A-Z </option>
+<option value="reserved_movie_name|DESC"> Z-A </option>
+<option value="id|DESC"> From newest to oldest </option>
+<option value="id|ASC"> From oldest to newest </option>
+</select>
+
 
 <hr style="height:2px;border-width:0;color:gray;background-color:gray">
 <div>
@@ -21,3 +29,25 @@
 
 {% endfor %}
 </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+var selectedSort = $("#select");
+
+selectedSort.on('change', function(){
+    console.log("changed");
+    $.ajax({
+        url: '/drupal/all-reservations?selectedSort=' + selectedSort.val(),
+        type: 'POST',
+        cache: false,
+        data: selectedSort,
+        success: function (){
+            window.location.href = '/drupal/all-reservations?selectedSort=' + selectedSort.val();
+        }
+    });
+});
+
+
+</script>

@@ -47,7 +47,7 @@ class MovieReservation extends ControllerBase{
   }
 
   public function getMovieList(){
-   $selectedGenre= \Drupal::request()->request->get('selectedGenre');
+   $selectedGenre= \Drupal::request()->query->get('selectedGenre');
    if (!empty($selectedGenre)){
       $allNodeIds = \Drupal::entityQuery('node')->condition('type', 'movies')->condition('field_genres', strtolower($selectedGenre))->execute();
       }else{
@@ -64,26 +64,25 @@ class MovieReservation extends ControllerBase{
   public function saveReservation(){
 
   $reservationData = \Drupal::request()->request->get('reservationData');
-  $data = json_decode($reservationData);
-  $name= $data->thename;
-  $movie= $data->themovie;
-  $day= $data->theday;
+  $data = json_decode($reservationData, true);
+  
   $connection = \Drupal\Core\Database\Database::getConnection();
-
-  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
-  $node = $node_storage->load($movie);
-  $title= $node->title->value;
-  $vid = $node->vid->value;
-
+  $query = $connection->select('node_field_data');
+  $query->fields('node_field_data', ['vid', 'title']);
+  $query->condition('nid', $data["themovie"]);
+  $result = $query->execute();
+  $values = $result->fetchAll();
+  
+  
   
   if(!empty($reservationData)){
     $result = $connection->insert('reservations')
     ->fields([
-      'day_of_reservation' => $day,
+      'day_of_reservation' => $data["theday"],
       'time_of_reservation' => date('Y-m-d H:i:s'),
-      'reserved_movie_name' => $title,
-      'reserved_movie_genre' => $vid,
-      'customer_name' => $name,
+      'reserved_movie_name' => $values[0]->title,
+      'reserved_movie_genre' => $values[0]->vid,
+      'customer_name' => $data["thename"],
     ])
     ->execute();
   
@@ -96,10 +95,29 @@ class MovieReservation extends ControllerBase{
 
   public function getReservationList(){
 
+    $selectedSort= \Drupal::request()->query->get('selectedSort');
     $database=  \Drupal\Core\Database\Database::getConnection();
-    $query = $database->query('SELECT * FROM reservations');
+
+    if($selectedSort == 'reserved_movie_name|ASC'){
+
+      $query = $database->query('SELECT * FROM reservations ORDER BY reserved_movie_name ASC');
+
+    } elseif ($selectedSort == 'reserved_movie_name|DESC'){
+
+      $query= $database->query('SELECT * FROM reservations ORDER BY reserved_movie_name DESC');
+
+    } elseif ($selectedSort == 'id|DESC'){
+
+      $query= $database->query('SELECT * FROM reservations ORDER BY id DESC');
+
+    } else{
+      $query = $database->query('SELECT * FROM reservations');
+
+    }
+
     $reservations = $query->fetchAll();
     return $reservations;
   }
-}
+  }
+
 

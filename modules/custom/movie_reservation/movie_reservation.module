@@ -20,8 +20,8 @@ function movie_reservation_theme($existing, $type, $theme, $path){
     'reservation_list' => array (
 
       'variables' => array (
-        'title' => '',
-        'reservations' => array() )
+        'reservations' => array(),
+        'title' => '' )
     ),
   ];
 }
