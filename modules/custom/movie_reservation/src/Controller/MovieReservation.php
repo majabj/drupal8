@@ -117,7 +117,9 @@ class MovieReservation extends ControllerBase{
 
     $reservations = $query->fetchAll();
     return $reservations;
+
   }
+
   }
 
 
