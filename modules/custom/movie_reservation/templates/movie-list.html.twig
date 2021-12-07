@@ -75,28 +75,26 @@ $('.movie').click(function(){
         $(this).css("background-color", "orange");
     }   
 });
-  
-var selectedMovie = " ";
-$(".reserve-movie").click(function (e) {
-  selectedMovie = $(this).parent('.movie').attr('movie-id');
-  reservationData.themovie= selectedMovie;
-  alert(selectedMovie);
-  console.log(selectedMovie);
-  const movie = e.target.closest(".movie");
-  const days = movie.querySelector(".available-movie-days");
-  $(".modal .days").html(days.innerHTML);
-  $(".modal").modal("show");
-});
 
-var selectedDay= " ";
+$(".reserve-movie").click(function (e) {
+   const selectedMovie = $(this).parent('.movie').attr('movie-id');
+   reservationData.themovie= selectedMovie;
+   alert(selectedMovie);
+   console.log(selectedMovie);
+   const movie = e.target.closest(".movie");
+   const days = movie.querySelector(".available-movie-days");
+   $(".modal .days").html(days.innerHTML);
+   $(".modal").modal("show");
+ });
+ 
 $(document).on("click","#available-days",function(event){
-  selectedDay = $(event.target).text();
+  const selectedDay = $(event.target).text();
   reservationData.theday= selectedDay;
   alert(selectedDay);
   console.log(selectedDay);
   $(".modal-footer").children('.confirm-reservation').css("visibility", "visible");
-});
-
+ });
+ 
 $('.close').click(function(){
   $('.modal-footer').children('.confirm-reservation').css("visibility", "hidden");
 })

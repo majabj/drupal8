@@ -27,6 +27,7 @@ class MovieReservation extends ControllerBase{
       '#genres' => $this->getTaxonomy('genres'),
       '#days' => $this->getTaxonomy('days'),
       '#reservation' => $this->saveReservation(),
+      
     ];
   }
   /**
