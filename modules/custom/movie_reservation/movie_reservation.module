@@ -1,18 +1,23 @@
 
 <?php
 
-
 function movie_reservation_theme($existing, $type, $theme, $path)
 {
-  return array(
+  return [
     'movie_list' => array(
-      'variables' => array('movies' => array(), 
+      'variables' => array(
+        'movies' => array(), 
         'title' => '', 
         'genres' => array(), 
-        'days' => array())
-        
-    )
-  );
+        'days' => array(),
+        'reservation' => array() )   
+    ),
+    'reservation_list' => array (
+      'variables' => array (
+        'reservations' => array(),
+        'title' => '' )
+    ),
+  ];
 }
 
 function movie_reservation_page_attachments(array &$page) {

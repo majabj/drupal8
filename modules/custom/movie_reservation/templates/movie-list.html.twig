@@ -1,46 +1,40 @@
-  {{ attach_library('movie_reservation/movie_reservation_css') }}
+{{ attach_library('movie_reservation/movie_reservation_css') }}
 
+<input type="text" id="customer-name" maxlength="10" style="text-transform: capitalize;
+placeholder="Please write your full name" required>
+<button id="confirm-name"> Confirm </button>
 
-  <input type="text" id="customer-name" maxlength="10" style="text-transform: capitalize;
-   placeholder="Please write your full name" required>
+<h3> Please select movie genre for which you would like to make a reservation: </h3>
+<select>
+{% for genre in genres %}
+<option hidden disabled selected value> -- select genre -- </option>
+<option value= "{{genre.tid.value}}"> {{genre.name.value}}</option>
+{% endfor %}
+</select>
 
-  <button id="confirm-name"> Confirm </button>
+<div>
+{% for movie in movies %}
+<div class="movie" movie-id= "{{movie.nid.value}}">
+  <div class="movie-title">{{ movie.title.value }}</div>
+  <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
+  <div class="movie-description">{{ movie.field_description.value }}</div>
 
-  <h3> Please select movie genre for which you would like to make a reservation: </h3>
+  <h3> This movie is available on: </h3>
+  <div class="available-movie-days">
+  {% for day in movie.field_days %}
+    <span><a id="available-days" href="javascript:void(0)">{{day.entity.label}}</a></span>
+  {% endfor %}
+  </div>
+  <br>
+  <button class="reserve-movie" style="visibility:hidden"> Reserve</button>
+  </div>  
+{% endfor %}
+</div>
 
-    <select>
-    {% for genre in genres %}
-    <option value= "{{genre.tid.value}}"> {{genre.name.value}}</option>
-    {% endfor %}
-    </select>
-
-    <div>
-    {% for movie in movies %}
-      <div class="movie" movie-id= "{{movie.nid.value}}">
-      <div class="movie-title">{{ movie.title.value }}</div>
-      <img src="{{ file_url(movie.field_image.entity.uri.value) }}">
-      <div class="movie-description">{{ movie.field_description.value }}</div>
-
-      <h3> This movie is available on: </h3>
-      <div class="available-movie-days">
-        {% for day in movie.field_days %}
-        <span><a id="available-days" href="javascript:void(0)">{{day.entity.label}}</a></span>
-        {% endfor %}
-      </div>
-      <br>
-      <button class="reserve-movie" style="visibility:hidden"> Reserve</button>
-
-    </div>
-    {% endfor %}
-
-    </div>
-
-
-  <!-- The Modal -->
-  <div id="confirm-reservation-modal" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content">
+<!-- The Modal -->
+<div id="confirm-reservation-modal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
       <button type="button" class="close" data-dismiss="modal">&times;</button>
       <h4 class="modal-title">Available days for this movie are:</h4>
       <div class= "modal-body">
@@ -49,102 +43,91 @@
       <div class="modal-footer">
       <button type="button"  class="confirm-reservation" id="confirmed" style="visibility:hidden">Confirm your movie reservation </button> </div>
       </div>
-    </div>
   </div>
+</div>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script type="text/javascript">
 
+var selectedGenre = $('select');
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script type="text/javascript">
-
-    var selectedGenre = $('select');
-
-    selectedGenre.on('change', function () {
-      $.ajax({
-        url: '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val(),
-        type: 'POST',
-        cache: false,
-        success: function () {
-          window.location.href = '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val();
+selectedGenre.on('change', function () {
+  $.ajax({
+    url: '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val(),
+    type: 'GET',
+    cache: false,
+    data: selectedGenre,
+    success: function () {
+    window.location.href = '/drupal/movie-reservation?selectedGenre=' + selectedGenre.val();
       }
-      });
-    });
+  });
+});
    
-    
-    
-    $('.movie').click(function(){
-      if($(this).prop('id')=='selected'){
-        $(this).children('.reserve-movie').css("visibility", "hidden");
-        $(this).removeAttr('id');
-        $(this).css("background-color", "white");
+$('.movie').click(function(){
+  if($(this).prop('id')=='selected'){
+    $(this).children('.reserve-movie').css("visibility", "hidden");
+    $(this).removeAttr('id');
+    $(this).css("background-color", "white");
+    } else {
+        $(this).attr('id', 'selected');
+        $(this).children('.reserve-movie').css("visibility", "visible");
+        $(this).css("background-color", "orange");
+    }   
+});
 
-      }else{
-          $(this).attr('id', 'selected');
-          $(this).children('.reserve-movie').css("visibility", "visible");
-          $(this).css("background-color", "orange");
-          }   
+$(".reserve-movie").click(function (e) {
+   const selectedMovie = $(this).parent('.movie').attr('movie-id');
+   reservationData.themovie= selectedMovie;
+   alert(selectedMovie);
+   console.log(selectedMovie);
+   const movie = e.target.closest(".movie");
+   const days = movie.querySelector(".available-movie-days");
+   $(".modal .days").html(days.innerHTML);
+   $(".modal").modal("show");
+ });
+ 
+$(document).on("click","#available-days",function(event){
+  const selectedDay = $(event.target).text();
+  reservationData.theday= selectedDay;
+  alert(selectedDay);
+  console.log(selectedDay);
+  $(".modal-footer").children('.confirm-reservation').css("visibility", "visible");
+ });
+ 
+$('.close').click(function(){
+  $('.modal-footer').children('.confirm-reservation').css("visibility", "hidden");
+})
 
-    });
+$(document).on("click","#confirm-name", function(event){
+  const name = document.getElementById('customer-name').value;
+  if(name.match(/^[a-zA-Z_ ]*$/)){
+    reservationData.thename= name;
+    alert(name);
+    console.log(name);
+    return name;
+    } else {
+        alert("Please enter only alphabets");
+        return false;
+    }
+});
+
+console.log('jasammajacarica');
+var confirmReservation = $('.confirm-reservation');
+var reservationData = {}
   
-    $(".reserve-movie").click(function (e) {
-      const selectedMovie = $(this).parent('.movie').attr('movie-id');
-      reservationData.themovie= selectedMovie;
-      alert(selectedMovie);
-      console.log(selectedMovie);
-
-      const movie = e.target.closest(".movie");
-      const days = movie.querySelector(".available-movie-days");
-      $(".modal .days").html(days.innerHTML);
-      $(".modal").modal("show");
-    });
-
-    $(document).on("click","#available-days",function(event){
-      const selectedDay = $(event.target).text();
-      reservationData.theday= selectedDay;
-      alert(selectedDay);
-      console.log(selectedDay);
-      $(".modal-footer").children('.confirm-reservation').css("visibility", "visible");
-
-    });
-
-    $('.close').click(function(){
-      $('.modal-footer').children('.confirm-reservation').css("visibility", "hidden");
-    })
-
-  
-    $(document).on("click","#confirm-name", function(event){
-      const name = document.getElementById('customer-name').value;
-      if(name.match(/^[a-zA-Z_ ]*$/)){
-        reservationData.thename= name;
-        alert(name);
-        console.log(name);
-        return name;
-
-      } else {
-          alert("Please enter only alphabets");
-          return false;
-      }
-   });
-
-    console.log('jasammajacarica');
-    var confirmReservation = $('.confirm-reservation');
-
-    var reservationData = {}
-  
-    confirmReservation.on('click', function(){
-
-      $.ajax({
-        url: '/drupal/movie-reservation',
-        type: 'POST',
-        cache: false,
-        data: { reservationData: JSON.stringify(reservationData) },
-        success: function(data){
-          alert("Success! Your information has been saved!");
+confirmReservation.on('click', function(){
+  $.ajax({
+      url: '/drupal/movie-reservation',
+      type: 'POST',
+      cache: false,
+      data: { reservationData: JSON.stringify(reservationData) },
+      success: function(){
+      alert("Success! Your information has been saved!");
         }
-      });
-    });
+  });
+});
 
-  </script>
+</script>
 
 

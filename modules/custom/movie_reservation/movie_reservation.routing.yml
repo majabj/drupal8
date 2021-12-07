@@ -3,7 +3,15 @@ movie_reservation.page:
     defaults:
        _controller: '\Drupal\movie_reservation\Controller\MovieReservation::page'
        _title: 'Welcome to the movie reservation'
+    methods: [GET,POST]      
     requirements:
       _permission: 'access content'
 
-
+movie_reservation.reservation:
+    path: '/all-reservations'
+    defaults:
+       _controller: '\Drupal\movie_reservation\Controller\MovieReservation::reservationPage'
+       _title: 'Welcome to the movie reservation'
+    methods: [GET,POST]      
+    requirements:
+      _permission: 'access content'      

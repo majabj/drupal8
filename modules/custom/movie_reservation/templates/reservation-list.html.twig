@@ -1,0 +1,41 @@
+<h3> Select way of sorting reservations: </h3>
+<select name="sort" id="select"> 
+<option hidden disabled selected value> -- select an option -- </option>
+<option value="reserved_movie_name|ASC"> A-Z </option>
+<option value="reserved_movie_name|DESC"> Z-A </option>
+<option value="id|DESC"> From newest to oldest </option>
+<option value="id|ASC"> From oldest to newest </option>
+</select>
+
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+<div>
+{% for reservation in reservations %}
+<div class ="reservation">
+<h1> <div class ="id-reservation" style="color:red; "> {{reservation.id}}</div> </h1>
+<h3> <div class= "reserved-movie">Reservation for movie: {{reservation.reserved_movie_name}}</div> </h3>
+<h3> <div class ="reserved-day">Day of reservation: {{reservation.day_of_reservation}}</div> </h3>
+<h3> <div class="reserved-customer-name"> Name of customer: {{reservation.customer_name}}</div> </h3>
+</div>
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+{% endfor %}
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+var selectedSort = $("#select");
+selectedSort.on('change', function(){
+    console.log("changed");
+    $.ajax({
+        url: '/drupal/all-reservations?selectedSort=' + selectedSort.val(),
+        type: 'GET',
+        cache: false,
+        data: selectedSort,
+        success: function (){
+            window.location.href = '/drupal/all-reservations?selectedSort=' + selectedSort.val();
+        }
+    });
+});
+
+</script>
